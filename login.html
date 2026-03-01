@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cianc — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="bg"></div>
+
+  <div class="auth-wrap">
+    <div class="split-card reverse">
+
+      <!-- Right gradient panel -->
+      <div class="panel panel-right">
+        <div class="panel-brand">
+          <div class="panel-icon">C</div>
+          <span class="panel-name">Cianc</span>
+        </div>
+        <div class="panel-body">
+          <h2>Hello, Friend!</h2>
+          <p>New here? Create an account and start your journey with Cianc today.</p>
+          <a href="signup.html" class="btn-outline">SIGN UP</a>
+        </div>
+      </div>
+
+      <!-- Left form -->
+      <div class="form-panel form-panel-left">
+        <h1>Sign In to Cianc</h1>
+        <p class="sub">Good to see you again</p>
+
+        <div class="socials">
+          <button class="soc-btn">f</button>
+          <button class="soc-btn">G+</button>
+          <button class="soc-btn">in</button>
+        </div>
+
+        <div class="divider">or use your email</div>
+
+        <div class="field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <input type="email" id="li-email" placeholder="Email Address">
+        </div>
+        <div class="field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="li-pass" placeholder="Password">
+        </div>
+
+        <div class="forgot"><a href="#">Forgot your password?</a></div>
+
+        <p class="errmsg" id="li-err"></p>
+
+        <button class="btn-primary" id="li-btn" onclick="doLogin()">
+          <span class="lbl">SIGN IN</span>
+          <div class="spin"></div>
+        </button>
+
+        <div class="link-row">New to Cianc? <a href="signup.html">Create an account</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
