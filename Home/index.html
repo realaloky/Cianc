@@ -1,274 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cianc</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --grad: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-}
-
-html, body {
-  width: 100%; height: 100%;
-  font-family: 'DM Sans', Arial, sans-serif;
-  background: #0d0d0d;
-  overflow: hidden;
-}
-
-#bg {
-  position: fixed; inset: 0; z-index: 0;
-  background: #0d0d0d; overflow: hidden;
-}
-#bg::before {
-  content: ''; position: absolute;
-  width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(220,39,67,.22) 0%, transparent 70%);
-  top: -200px; right: -150px;
-  animation: blob 7s ease-in-out infinite;
-}
-#bg::after {
-  content: ''; position: absolute;
-  width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(188,24,136,.18) 0%, transparent 70%);
-  bottom: -150px; left: -100px;
-  animation: blob 9s ease-in-out infinite reverse;
-}
-@keyframes blob { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
-
-.view {
-  position: fixed; inset: 0; z-index: 1;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity .5s ease, transform .5s ease;
-  transform: translateY(20px);
-}
-.view.active { opacity: 1; pointer-events: all; transform: translateY(0); }
-
-/* SPLIT CARD */
-.split-card {
-  display: flex; width: 800px; max-width: 96vw;
-  min-height: 520px; border-radius: 28px; overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0,0,0,.7);
-  border: 1px solid rgba(255,255,255,.07);
-}
-
-.panel {
-  width: 290px; flex-shrink: 0;
-  background: var(--grad);
-  padding: 44px 36px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  position: relative; overflow: hidden;
-}
-.panel::before {
-  content:''; position:absolute; width:220px; height:220px; border-radius:50%;
-  background:rgba(255,255,255,.12); top:-70px; right:-70px;
-}
-.panel::after {
-  content:''; position:absolute; width:160px; height:160px; border-radius:50%;
-  background:rgba(255,255,255,.08); bottom:-50px; left:-50px;
-}
-.panel-brand { display:flex; align-items:center; gap:10px; z-index:1; }
-.panel-icon {
-  width:38px; height:38px; border-radius:10px;
-  background:rgba(255,255,255,.25);
-  display:flex; align-items:center; justify-content:center;
-  font-size:18px; font-weight:700; color:#fff;
-  font-family:'Playfair Display',Georgia,serif;
-}
-.panel-name { font-family:'Playfair Display',Georgia,serif; font-size:22px; color:#fff; font-weight:700; }
-.panel-body { z-index:1; }
-.panel-body h2 {
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:27px; color:#fff; margin-bottom:12px; line-height:1.2;
-}
-.panel-body p { font-size:14px; color:rgba(255,255,255,.75); line-height:1.65; font-weight:300; }
-
-.form-panel {
-  flex:1; background:rgba(18,18,18,.98);
-  padding:48px 44px;
-  display:flex; flex-direction:column; justify-content:center;
-}
-.form-panel h1 {
-  font-family:'Playfair Display',Georgia,serif;
-  font-size:28px; color:#fff; margin-bottom:6px;
-}
-.form-panel .sub { font-size:13px; color:rgba(255,255,255,.38); margin-bottom:26px; font-weight:300; }
-
-.socials { display:flex; gap:10px; margin-bottom:18px; }
-.soc-btn {
-  flex:1; height:44px; border-radius:12px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.11);
-  color:rgba(255,255,255,.55); font-size:14px;
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-family:'DM Sans',Arial,sans-serif;
-  transition:background .2s,color .2s;
-}
-.soc-btn:hover { background:rgba(255,255,255,.1); color:#fff; }
-
-.divider {
-  display:flex; align-items:center; gap:10px;
-  color:rgba(255,255,255,.22); font-size:12px; margin:14px 0;
-}
-.divider::before,.divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.1); }
-
-.field { position:relative; margin-bottom:13px; }
-.field svg {
-  position:absolute; left:15px; top:50%; transform:translateY(-50%);
-  width:15px; height:15px; color:rgba(255,255,255,.28); pointer-events:none;
-}
-.field input {
-  width:100%; height:50px; padding:0 16px 0 42px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:13px; color:#fff;
-  font-family:'DM Sans',Arial,sans-serif; font-size:14px; outline:none;
-  transition:border-color .2s,box-shadow .2s;
-}
-.field input::placeholder { color:rgba(255,255,255,.28); }
-.field input:focus {
-  border-color:#dc2743;
-  box-shadow:0 0 0 3px rgba(220,39,67,.13);
-  background:rgba(255,255,255,.08);
-}
-
-.errmsg { color:#ff6b6b; font-size:12px; padding-left:4px; margin-top:-6px; margin-bottom:8px; display:none; }
-.errmsg.show { display:block; }
-
-.forgot { text-align:right; margin-top:-4px; margin-bottom:12px; font-size:12px; }
-.forgot a {
-  background:var(--grad); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text; cursor:pointer;
-}
-
-.btn-primary {
-  width:100%; height:52px; border-radius:14px;
-  background:var(--grad); border:none; color:#fff;
-  font-family:'DM Sans',Arial,sans-serif;
-  font-size:14px; font-weight:600; letter-spacing:1.2px;
-  cursor:pointer; margin-top:6px; position:relative; overflow:hidden;
-  transition:transform .2s,box-shadow .2s;
-}
-.btn-primary:hover { transform:translateY(-2px); box-shadow:0 14px 34px rgba(220,39,67,.32); }
-.btn-primary:active { transform:none; }
-.btn-primary .spin {
-  display:none; width:18px; height:18px; margin:0 auto;
-  border:2px solid rgba(255,255,255,.35); border-top-color:#fff;
-  border-radius:50%; animation:spin .6s linear infinite;
-}
-@keyframes spin { to{transform:rotate(360deg)} }
-.btn-primary.loading .lbl { display:none; }
-.btn-primary.loading .spin { display:block; }
-
-.btn-outline {
-  width:100%; height:48px; border-radius:24px;
-  background:transparent; border:2px solid rgba(255,255,255,.55); color:#fff;
-  font-family:'DM Sans',Arial,sans-serif;
-  font-size:13px; font-weight:600; letter-spacing:1px;
-  cursor:pointer; margin-top:22px; z-index:1; position:relative;
-  transition:background .2s;
-}
-.btn-outline:hover { background:rgba(255,255,255,.15); }
-
-.link-row { text-align:center; margin-top:18px; font-size:13px; color:rgba(255,255,255,.38); }
-.link-row a {
-  background:var(--grad); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text;
-  cursor:pointer; font-weight:500;
-}
-
-/* HOME */
-#view-home { flex-direction:column; overflow-y:auto; overflow-x:hidden; align-items:stretch; }
-.nav {
-  position:sticky; top:0;
-  background:rgba(10,10,10,.92); backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  height:62px; display:flex; align-items:center;
-  justify-content:space-between; padding:0 30px; z-index:10; flex-shrink:0;
-}
-.nav-brand { display:flex; align-items:center; gap:10px; }
-.nav-icon {
-  width:34px; height:34px; border-radius:10px; background:var(--grad);
-  display:flex; align-items:center; justify-content:center;
-  font-size:16px; font-weight:700; color:#fff;
-  font-family:'Playfair Display',Georgia,serif;
-}
-.nav-title {
-  font-family:'Playfair Display',Georgia,serif; font-size:22px;
-  background:var(--grad); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text;
-}
-.nav-av {
-  width:36px; height:36px; border-radius:50%; background:var(--grad);
-  display:flex; align-items:center; justify-content:center;
-  font-size:14px; font-weight:600; color:#fff; cursor:pointer;
-}
-
-.home-inner { max-width:860px; margin:0 auto; padding:50px 24px 70px; width:100%; }
-.hero { text-align:center; padding:30px 0 36px; }
-.hero-greet { font-size:13px; color:rgba(255,255,255,.35); margin-bottom:10px; }
-.hero-greet strong { color:rgba(255,255,255,.65); font-weight:500; }
-.hero h1 {
-  font-family:'Playfair Display',Georgia,serif; font-size:48px; line-height:1.1;
-  background:var(--grad); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:14px;
-}
-.hero p { font-size:15px; color:rgba(255,255,255,.38); max-width:400px; margin:0 auto; line-height:1.7; font-weight:300; }
-
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:28px 0; }
-.stat {
-  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
-  border-radius:18px; padding:26px; text-align:center;
-}
-.stat-n {
-  font-family:'Playfair Display',Georgia,serif; font-size:34px;
-  background:var(--grad); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text;
-}
-.stat-l { font-size:11px; color:rgba(255,255,255,.3); margin-top:4px; letter-spacing:.6px; }
-
-.sec-title { font-family:'Playfair Display',Georgia,serif; font-size:19px; color:#fff; margin:32px 0 14px; }
-.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-.tile { aspect-ratio:1; border-radius:16px; position:relative; overflow:hidden; cursor:pointer; }
-.tile:nth-child(1){background:var(--grad)}
-.tile:nth-child(2){background:linear-gradient(135deg,#4facfe,#00f2fe)}
-.tile:nth-child(3){background:linear-gradient(135deg,#43e97b,#38f9d7)}
-.tile:nth-child(4){background:linear-gradient(135deg,#fa709a,#fee140)}
-.tile:nth-child(5){background:linear-gradient(135deg,#a18cd1,#fbc2eb)}
-.tile:nth-child(6){background:linear-gradient(135deg,#ffecd2,#fcb69f)}
-.tile::after { content:''; position:absolute; inset:0; background:rgba(0,0,0,0); transition:background .2s; }
-.tile:hover::after { background:rgba(0,0,0,.25); }
-.tile-lbl {
-  position:absolute; bottom:12px; left:12px; color:#fff;
-  font-size:12px; font-weight:500; z-index:1;
-  text-shadow:0 2px 6px rgba(0,0,0,.35);
-}
-
-.toast {
-  position:fixed; bottom:28px; left:50%;
-  transform:translateX(-50%) translateY(16px);
-  background:rgba(25,25,25,.96); border:1px solid rgba(255,255,255,.1);
-  color:#fff; font-size:13px; padding:11px 22px; border-radius:50px;
-  backdrop-filter:blur(14px); opacity:0; transition:all .3s; z-index:999; white-space:nowrap;
-}
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-@media(max-width:640px){
-  .split-card{flex-direction:column}
-  .panel{width:100%;padding:28px 24px}
-  .form-panel{padding:28px 22px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .hero h1{font-size:34px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cianc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div id="bg"></div>
 <div class="toast" id="toast"></div>
 
@@ -309,7 +50,8 @@ html, body {
       </div>
       <p class="errmsg" id="su-err"></p>
       <button class="btn-primary" id="su-btn" onclick="doSignup()">
-        <span class="lbl">SIGN UP</span><div class="spin"></div>
+        <span class="lbl">SIGN UP</span>
+        <div class="spin"></div>
       </button>
       <div class="link-row">Already have an account? <a onclick="go('login')">Sign In</a></div>
     </div>
@@ -318,8 +60,8 @@ html, body {
 
 <!-- ====== LOGIN ====== -->
 <div class="view" id="view-login">
-  <div class="split-card" style="flex-direction:row-reverse">
-    <div class="panel" style="border-radius:0 28px 28px 0">
+  <div class="split-card reverse">
+    <div class="panel panel-right">
       <div class="panel-brand">
         <div class="panel-icon">C</div>
         <span class="panel-name">Cianc</span>
@@ -330,7 +72,7 @@ html, body {
         <button class="btn-outline" onclick="go('signup')">SIGN UP</button>
       </div>
     </div>
-    <div class="form-panel" style="border-radius:28px 0 0 28px">
+    <div class="form-panel form-panel-left">
       <h1>Sign In to Cianc</h1>
       <p class="sub">Good to see you again</p>
       <div class="socials">
@@ -350,7 +92,8 @@ html, body {
       <div class="forgot"><a>Forgot your password?</a></div>
       <p class="errmsg" id="li-err"></p>
       <button class="btn-primary" id="li-btn" onclick="doLogin()">
-        <span class="lbl">SIGN IN</span><div class="spin"></div>
+        <span class="lbl">SIGN IN</span>
+        <div class="spin"></div>
       </button>
       <div class="link-row">New to Cianc? <a onclick="go('signup')">Create an account</a></div>
     </div>
@@ -370,7 +113,7 @@ html, body {
     <div class="hero">
       <div class="hero-greet">Welcome back, <strong id="uname">Friend</strong></div>
       <h1>Your Creative Space</h1>
-      <p>Share moments, discover stories, and connect with the people that matter most to you.</p>
+      <p>Share moments, discover stories, and connect with the people that matter most.</p>
     </div>
     <div class="stats">
       <div class="stat"><div class="stat-n">248</div><div class="stat-l">POSTS</div></div>
@@ -379,80 +122,16 @@ html, body {
     </div>
     <div class="sec-title">Explore</div>
     <div class="grid">
-      <div class="tile"><span class="tile-lbl">Trending</span></div>
-      <div class="tile"><span class="tile-lbl">Travel</span></div>
-      <div class="tile"><span class="tile-lbl">Nature</span></div>
-      <div class="tile"><span class="tile-lbl">Design</span></div>
-      <div class="tile"><span class="tile-lbl">Art</span></div>
-      <div class="tile"><span class="tile-lbl">Lifestyle</span></div>
+      <div class="tile t1"><span class="tile-lbl">Trending</span></div>
+      <div class="tile t2"><span class="tile-lbl">Travel</span></div>
+      <div class="tile t3"><span class="tile-lbl">Nature</span></div>
+      <div class="tile t4"><span class="tile-lbl">Design</span></div>
+      <div class="tile t5"><span class="tile-lbl">Art</span></div>
+      <div class="tile t6"><span class="tile-lbl">Lifestyle</span></div>
     </div>
   </div>
 </div>
 
-<script>
-var user = {};
-
-function go(to) {
-  document.querySelectorAll('.view').forEach(function(v) {
-    v.classList.remove('active');
-  });
-  var next = document.getElementById('view-' + to);
-  next.style.transform = 'translateY(20px)';
-  setTimeout(function() { next.classList.add('active'); }, 20);
-}
-
-function toast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 3000);
-}
-
-function setLoading(id, on) {
-  document.getElementById(id).classList[on ? 'add' : 'remove']('loading');
-}
-
-function doSignup() {
-  var n = document.getElementById('su-name').value.trim();
-  var e = document.getElementById('su-email').value.trim();
-  var p = document.getElementById('su-pass').value;
-  var err = document.getElementById('su-err');
-  if (!n || !e || !p) { err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
-  if (p.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('show'); return; }
-  err.classList.remove('show');
-  setLoading('su-btn', true);
-  user = { name: n, email: e };
-  setTimeout(function() { setLoading('su-btn', false); goHome(); }, 1300);
-}
-
-function doLogin() {
-  var e = document.getElementById('li-email').value.trim();
-  var p = document.getElementById('li-pass').value;
-  var err = document.getElementById('li-err');
-  if (!e || !p) { err.textContent = 'Please enter your email and password.'; err.classList.add('show'); return; }
-  err.classList.remove('show');
-  setLoading('li-btn', true);
-  user = { name: e.split('@')[0], email: e };
-  setTimeout(function() { setLoading('li-btn', false); goHome(); }, 1300);
-}
-
-function goHome() {
-  var name = user.name ? user.name.charAt(0).toUpperCase() + user.name.slice(1) : 'Friend';
-  document.getElementById('uname').textContent = name;
-  document.getElementById('nav-av').textContent = name.charAt(0).toUpperCase();
-  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
-  var home = document.getElementById('view-home');
-  home.style.transform = 'translateY(20px)';
-  setTimeout(function() { home.classList.add('active'); }, 20);
-  setTimeout(function() { toast('Welcome to Cianc, ' + name + '!'); }, 600);
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key !== 'Enter') return;
-  if (document.getElementById('view-signup').classList.contains('active')) doSignup();
-  else if (document.getElementById('view-login').classList.contains('active')) doLogin();
-});
-</script>
+<script src="script.js"></script>
 </body>
-     </html>
-     
+</html>
