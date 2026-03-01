@@ -1,35 +1,27 @@
-var user = {};
-
-function go(to) {
-  var views = document.querySelectorAll('.view');
-  views.forEach(function(v) {
-    v.classList.remove('active');
-  });
-  var next = document.getElementById('view-' + to);
-  next.style.transform = 'translateY(20px)';
-  setTimeout(function() {
-    next.classList.add('active');
-  }, 20);
-}
-
+// ── Helpers ──────────────────────────────────────────
 function showToast(msg) {
   var t = document.getElementById('toast');
+  if (!t) return;
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(function() {
-    t.classList.remove('show');
-  }, 3000);
+  setTimeout(function () { t.classList.remove('show'); }, 3000);
 }
 
 function setLoading(id, on) {
   var btn = document.getElementById(id);
-  if (on) {
-    btn.classList.add('loading');
-  } else {
-    btn.classList.remove('loading');
-  }
+  if (!btn) return;
+  btn.classList[on ? 'add' : 'remove']('loading');
 }
 
+function saveName(name) {
+  try { localStorage.setItem('cianc_user', name); } catch (e) {}
+}
+
+function loadName() {
+  try { return localStorage.getItem('cianc_user') || 'Friend'; } catch (e) { return 'Friend'; }
+}
+
+// ── Signup ────────────────────────────────────────────
 function doSignup() {
   var name  = document.getElementById('su-name').value.trim();
   var email = document.getElementById('su-email').value.trim();
@@ -54,14 +46,14 @@ function doSignup() {
 
   err.classList.remove('show');
   setLoading('su-btn', true);
-  user = { name: name, email: email };
+  saveName(name.charAt(0).toUpperCase() + name.slice(1));
 
-  setTimeout(function() {
-    setLoading('su-btn', false);
-    goHome();
+  setTimeout(function () {
+    window.location.href = 'home.html';
   }, 1300);
 }
 
+// ── Login ─────────────────────────────────────────────
 function doLogin() {
   var email = document.getElementById('li-email').value.trim();
   var pass  = document.getElementById('li-pass').value;
@@ -80,42 +72,34 @@ function doLogin() {
 
   err.classList.remove('show');
   setLoading('li-btn', true);
-  user = { name: email.split('@')[0], email: email };
 
-  setTimeout(function() {
-    setLoading('li-btn', false);
-    goHome();
+  var name = email.split('@')[0];
+  saveName(name.charAt(0).toUpperCase() + name.slice(1));
+
+  setTimeout(function () {
+    window.location.href = 'home.html';
   }, 1300);
 }
 
-function goHome() {
-  var raw  = user.name || 'Friend';
-  var name = raw.charAt(0).toUpperCase() + raw.slice(1);
+// ── Home page — fill in user name ────────────────────
+(function () {
+  var uname = document.getElementById('uname');
+  var navAv = document.getElementById('nav-av');
+  var navUn = document.getElementById('nav-username');
 
-  document.getElementById('uname').textContent  = name;
-  document.getElementById('nav-av').textContent = name.charAt(0).toUpperCase();
+  if (!uname) return; // not home page
 
-  var views = document.querySelectorAll('.view');
-  views.forEach(function(v) {
-    v.classList.remove('active');
-  });
+  var name = loadName();
+  uname.textContent = name;
+  if (navAv) navAv.textContent = name.charAt(0).toUpperCase();
+  if (navUn) navUn.textContent = name;
 
-  var home = document.getElementById('view-home');
-  home.style.transform = 'translateY(20px)';
-  setTimeout(function() {
-    home.classList.add('active');
-  }, 20);
+  setTimeout(function () { showToast('Welcome to Cianc, ' + name + '!'); }, 400);
+})();
 
-  setTimeout(function() {
-    showToast('Welcome to Cianc, ' + name + '!');
-  }, 600);
-}
-
-// Allow Enter key to submit
-document.addEventListener('keydown', function(e) {
+// ── Enter key to submit ───────────────────────────────
+document.addEventListener('keydown', function (e) {
   if (e.key !== 'Enter') return;
-  var signup = document.getElementById('view-signup');
-  var login  = document.getElementById('view-login');
-  if (signup.classList.contains('active')) doSignup();
-  else if (login.classList.contains('active')) doLogin();
+  if (document.getElementById('su-btn')) doSignup();
+  else if (document.getElementById('li-btn')) doLogin();
 });
